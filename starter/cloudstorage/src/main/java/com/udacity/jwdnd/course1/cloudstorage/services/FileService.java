@@ -4,12 +4,14 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.FilesMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UsersMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.model.Users;
+import com.udacity.jwdnd.course1.cloudstorage.utility.AuthenticatedUserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,16 +19,23 @@ import java.util.List;
 public class FileService {
     private FilesMapper filesMapper;
     private UsersMapper usersMapper;
-    private Authentication authentication;
+    private AuthenticatedUserUtility userUtility;
+    private Users user;
 
-    @Autowired
-    public FileService(FilesMapper filesMapper, UsersMapper usersMapper, Authentication authentication) {
+    public FileService(FilesMapper filesMapper, UsersMapper usersMapper,AuthenticatedUserUtility userUtility) {
         this.filesMapper = filesMapper;
         this.usersMapper = usersMapper;
-        this.authentication = authentication;
+        this.userUtility = userUtility;
     }
 
-    private Users user = usersMapper.getUser(authentication.getName());
+    @PostConstruct
+    public void setUser(){
+        try{
+            user = userUtility.getAuthenticatedUser();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
 
     public int uploadNewFile(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
