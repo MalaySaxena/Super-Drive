@@ -2,12 +2,12 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +23,6 @@ public class FileController {
 
     public FileController(FileService fileService) {
         this.fileService = fileService;
-    }
-
-    @GetMapping("/")
-    public String getFiles(Authentication authentication, Model model){
-        model.addAttribute("files",fileService.loadFiles());
-        return "redirect:/";
     }
 
     @GetMapping("/file/{fileName:.+}")
@@ -48,18 +42,18 @@ public class FileController {
         return "redirect:/";
     }
 
-    @PostMapping("file/upload")
-    public String uploadFile(@RequestParam("fileName")MultipartFile file, Authentication authentication, RedirectAttributes redirectAttributes) {
+    @PostMapping("/file/upload")
+    public String uploadFile(@RequestParam("fileUpload")MultipartFile file, Authentication authentication, RedirectAttributes redirectAttributes) {
 
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message","Please upload a file!");
-            return "redirect:/";
+            return "home";
         }
-
-        fileService.uploadNewFile(file);
+        String userName = authentication.getName();
+        fileService.uploadNewFile(file,userName);
         redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getName() + '!');
 
-        return "redirect:/";
+        return "home";
     }
 
 }

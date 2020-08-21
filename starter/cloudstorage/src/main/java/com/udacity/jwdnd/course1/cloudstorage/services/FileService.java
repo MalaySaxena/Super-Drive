@@ -37,7 +37,8 @@ public class FileService {
         }
     }
 
-    public int uploadNewFile(MultipartFile file){
+    public int uploadNewFile(MultipartFile file, String userName){
+        user = usersMapper.getUser(userName);
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             return filesMapper.addFile(new Files(fileName,
@@ -57,7 +58,8 @@ public class FileService {
         return file;
     }
 
-    public List<Files> loadFiles(){
+    public List<Files> loadFiles(String userName){
+        user = usersMapper.getUser(userName);
         List<Files> files = filesMapper.getFiles(user.getUserId());
         return files;
     }
