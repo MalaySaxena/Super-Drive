@@ -33,4 +33,12 @@ public class AuthenticatedUserService {
         }
     }
 
+    public String getLoggedInName() throws NullPointerException{
+        if(loggedInUser != null){
+            return loggedInUser.getFirstName()+" "+loggedInUser.getLastName();
+        }else{
+            throw new NullPointerException();
+        }
+    }
+
 }

@@ -35,9 +35,6 @@ public class FileService {
                     ));
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
-            e.printStackTrace();
-            throw e;
         }
         return 0;
     }

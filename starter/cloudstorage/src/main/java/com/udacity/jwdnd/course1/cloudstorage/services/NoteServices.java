@@ -14,34 +14,40 @@ import java.util.List;
 public class NoteServices {
     private UsersMapper usersMapper;
     private NotesMapper notesMapper;
-    private Users user;
+    private AuthenticatedUserService authenticatedUser;
 
-    public NoteServices(UsersMapper usersMapper, NotesMapper notesMapper) {
+    public NoteServices(UsersMapper usersMapper, NotesMapper notesMapper, AuthenticatedUserService authenticatedUser) {
         this.usersMapper = usersMapper;
         this.notesMapper = notesMapper;
+        this.authenticatedUser = authenticatedUser;
     }
 
-
-    public Boolean isNoteAlreadyExist(Integer noteId){
-        return notesMapper.getNote(noteId) == null;
-    }
-
-    public List<Notes> getNotes(){
-        return notesMapper.getNotes(user.getUserId());
+    public boolean isNotePresent(Integer noteId){
+        return notesMapper.getNote(noteId) != null;
     }
 
     public int addNote(NoteForm noteForm){
-        return notesMapper.addNote(new Notes(noteForm.getNoteTitle(),noteForm.getNoteDescription(), user.getUserId()));
+        return notesMapper.addNote(new Notes(noteForm.getNoteTitle(),
+                noteForm.getNoteDescription(),
+                authenticatedUser.getLoggedInUserId()));
     }
 
-    public void updateNote(NoteForm noteForm){
+    public List<Notes> getNotes(){
+        return notesMapper.getNotes(authenticatedUser.getLoggedInUserId());
+    }
+
+    public Notes getNote(Integer noteId){
+        return notesMapper.getNote(noteId);
+    }
+
+    public void editNode(NoteForm noteForm){
         Notes note = notesMapper.getNote(noteForm.getId());
         note.setNoteTitle(noteForm.getNoteTitle());
         note.setNoteDescription(noteForm.getNoteDescription());
         notesMapper.updateNote(note);
     }
 
-    public void deleteNote(Notes note){
-        notesMapper.deleteNote(note.getNoteId());
+    public void deleteNote(Integer noteId){
+        notesMapper.deleteNote(noteId);
     }
 }
