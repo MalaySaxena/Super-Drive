@@ -4,8 +4,8 @@ import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteServices;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class NoteController {
@@ -16,25 +16,9 @@ public class NoteController {
         this.noteServices = noteServices;
     }
 
-    @PostMapping("/note")
-    public String noteAddOrUpdate(@ModelAttribute("noteForm")NoteForm noteForm, Authentication authentication, RedirectAttributes redirectAttributes){
-        if(noteForm.getId() > 0){
-            noteServices.editNode(noteForm);
-            redirectAttributes.addFlashAttribute("editNoteSuccess","Changes made to "+noteForm.getNoteTitle());
-            return "redirect:/result";
-        }else{
-            noteServices.addNote(noteForm);
-            redirectAttributes.addFlashAttribute("notesbar",true);
-            return "redirect:/home";
-        }
-
-    }
-
-    @GetMapping("/note/delete/{noteId:.+}")
-    public String delteNote(@PathVariable Integer noteId, Authentication authentication, RedirectAttributes redirectAttributes){
-        String noteTitle = noteServices.getNote(noteId).getNoteTitle();
-        noteServices.deleteNote(noteId);
-        redirectAttributes.addFlashAttribute("deleteNoteSuccess","Deleted note " + noteTitle);
-        return "redirect:/result";
+    @PostMapping("/note/add")
+    public String addNote(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication){
+        noteServices.addNote(noteForm);
+        return "redirect:/home";
     }
 }

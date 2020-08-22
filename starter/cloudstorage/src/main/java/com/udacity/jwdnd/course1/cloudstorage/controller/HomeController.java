@@ -1,8 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Files;
-import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
-import com.udacity.jwdnd.course1.cloudstorage.model.Users;
+import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import com.udacity.jwdnd.course1.cloudstorage.services.AuthenticatedUserService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteServices;
@@ -10,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -30,8 +29,9 @@ public class HomeController {
     }
 
     @GetMapping()
-    public String getHomePage(Authentication authentication, Model model){
+    public String getHomePage(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication, Model model){
         model.addAttribute("name",authenticatedUserService.getLoggedInName());
+
 
         List<Files> filesList;
         try {
@@ -40,8 +40,19 @@ public class HomeController {
             filesList = new ArrayList<>();
         }
 
+        List<Notes> notesList;
+
+        try {
+            notesList = noteServices.getNotes();
+        } catch (NullPointerException e){
+            notesList = new ArrayList<>();
+        }
+
         model.addAttribute("files",filesList);
-        model.addAttribute("size",filesList.size());
+        model.addAttribute("fileSize",filesList.size());
+        model.addAttribute("notes",notesList);
+        model.addAttribute("noteSize",notesList.size());
+
 
         return "home";
     }
