@@ -27,8 +27,8 @@ public interface FilesMapper {
             @Result(property = "userId", column = "userid"),
             @Result(property = "fileData", column = "filedata")
     })
-    @Select("SELECT FROM FILES WHERE userid = #{userId} AND filename = #{fileName}")
-    public Files getFile(Integer userId,String fileName);
+    @Select("SELECT * FROM FILES WHERE userid = #{userId} AND fileid = #{fileId}")
+    public Files getFile(Integer userId,Integer fileId);
 
     @Insert("INSERT INTO FILES(filename,contenttype,filesize,userid,filedata) VALUES(#{fileName},#{contentType},#{fileSize},#{userId},#{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
@@ -37,6 +37,6 @@ public interface FilesMapper {
     @Update("UPDATE FILES SET filename=#{fileName}, contenttype=#{contentType}, filesize=#{fileSize}, userid=#{userId}, filedata=#{fileData} WHERE fileid=#{fileId}")
     public void updateFile(Files file);
 
-    @Delete("DELETE FROM FILES WHERE fileid = #{fileId}")
-    public void deleteFile(long fileId);
+    @Delete("DELETE FROM FILES WHERE filename = #{fileName}")
+    public void deleteFile(String fileName);
 }

@@ -5,7 +5,6 @@ import com.udacity.jwdnd.course1.cloudstorage.mapper.UsersMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.Notes;
 import com.udacity.jwdnd.course1.cloudstorage.model.Users;
-import com.udacity.jwdnd.course1.cloudstorage.utility.AuthenticatedUserUtility;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,23 +14,13 @@ import java.util.List;
 public class NoteServices {
     private UsersMapper usersMapper;
     private NotesMapper notesMapper;
-    private AuthenticatedUserUtility authenticatedUserUtility;
     private Users user;
 
-    public NoteServices(UsersMapper usersMapper, NotesMapper notesMapper, AuthenticatedUserUtility authenticatedUserUtility) {
+    public NoteServices(UsersMapper usersMapper, NotesMapper notesMapper) {
         this.usersMapper = usersMapper;
         this.notesMapper = notesMapper;
-        this.authenticatedUserUtility = authenticatedUserUtility;
     }
 
-    @PostConstruct
-    public void setUser(){
-        try{
-            user = authenticatedUserUtility.getAuthenticatedUser();
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
 
     public Boolean isNoteAlreadyExist(Integer noteId){
         return notesMapper.getNote(noteId) == null;

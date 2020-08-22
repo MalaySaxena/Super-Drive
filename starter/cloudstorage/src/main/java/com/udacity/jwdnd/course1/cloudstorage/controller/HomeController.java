@@ -28,10 +28,9 @@ public class HomeController {
 
     @GetMapping()
     public String getHomePage(Authentication authentication, Model model){
-        String userName = authentication.getName();
         List<Files> filesList;
         try {
-            filesList = fileService.loadFiles(userName);
+            filesList = fileService.loadFiles();
         } catch (NullPointerException e){
             filesList = new ArrayList<>();
         }
