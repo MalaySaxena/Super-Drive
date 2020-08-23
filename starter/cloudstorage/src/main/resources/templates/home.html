@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </form>
-                <h1 th:text="${fileSize}">file number</h1>
+                <h2 th:text="${fileSize}">file number</h2>
                 <div class="table-responsive">
                     <table class="table table-striped" id="fileTable">
                         <thead>
@@ -63,8 +63,9 @@
                     </table>
                 </div>
             </div>
+            <h2 th:text="${noteSize}">note number</h2>
             <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                <button id="add-note" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                     + Add a New Note
                 </button>
 
@@ -80,11 +81,11 @@
                         <tbody>
                         <tr th:each="note : ${notes}">
                             <td>
-                                <button type="button" class="btn btn-success">Edit</button>
-                                <a class="btn btn-danger">Delete</a>
+                                <button type="button" class="btn btn-success" th:attr="data-id=${note.noteId},data-title=${note.noteTitle},data-description=${note.noteDescription}" onclick="showNoteModal(this.getAttribute('data-id'),this.getAttribute('data-title'),this.getAttribute('data-description'))">Edit</button>
+                                <a class="btn btn-danger" th:href="@{/note/delete/{noteId}(noteId = ${note.noteId})}">Delete</a>
                             </td>
-                            <th  id="notetitle" scope="row" th:text="${note.noteTitle}">Example Note Title</th>
-                            <td id="notedescription" th:text="${note.noteDescription}">Example Note Description </td>
+                            <th  id="notetitle" scope="row" th:text="${note.noteTitle}">Example Title</th>
+                            <td id="notedescription" th:text="${note.noteDescription}">Example Description </td>
                         </tr>
                         </tbody>
                     </table>
@@ -125,10 +126,7 @@
                 <button id="add-credential" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                     + Add a New Credential
                 </button>
-                <select th:field="*{showPassword}">
-                    <option th:value="'false'">Hide Password</option>
-                    <option th:value="'true'">Show Password</option>
-                </select>
+                <h2 th:text="${credentialSize}">credential number</h2>
                 <div class="table-responsive">
                     <table class="table table-striped" id="credentialTable">
                         <thead>
@@ -140,14 +138,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="credential : ${credentials}">
+                        <tr th:each="cred : ${credentials}">
                             <td>
-                                <button type="button" class="btn btn-success" th:onclick="javascript:showCredentialModal('#{credential.credentialId}','credential.url','credential.userName','credential.password')">Edit</button>
-                                <a class="btn btn-danger" th:href="@{/credential/{credentialId}(credentialId = #{credential.credentialId})}">Delete</a>
+                                <button type="button" class="btn btn-success" th:attr="data-id=${cred.credentialId},data-url=${cred.url},data-username=${cred.userName},data-password=${encryptService.decryptValue(cred.password,cred.key)}" onclick="showCredentialModal(this.getAttribute('data-id'),this.getAttribute('data-url'),this.getAttribute('data-username'),this.getAttribute('data-password'))">Edit</button>
+                                <a class="btn btn-danger" th:href="@{/credential/delete/{credentialId}(credentialId = ${cred.credentialId})}">Delete</a>
                             </td>
-                            <th scope="row" th:text="${credential.url}">Example URL</th>
-                            <td th:text="${credential.userName}">Example Username</td>
-                            <td th:text="${credential.password}">Example Password</td>
+                            <th scope="row" th:text="${cred.url}">Example URL</th>
+                            <td th:text="${cred.userName}">Example Username</td>
+                            <td th:if="${showPassword}" th:text="${cred.password}">Example Password</td>
+                            <td th:unless="${showPassword}" th:text="${cred.password}" type="password">Example Password</td>
                         </tr>
                         </tbody>
                     </table>

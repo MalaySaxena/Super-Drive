@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/userset")
@@ -16,7 +17,7 @@ public class AuthenticatedUserController {
     }
 
     @GetMapping()
-    public String getHomePage(Authentication authentication){
+    public String getHomePage(Authentication authentication, RedirectAttributes redirectAttributes){
         authenticatedUserService.setUser(authentication.getName());
         return "redirect:/home";
     }

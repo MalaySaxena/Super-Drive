@@ -19,7 +19,6 @@ public class NoteServices {
     }
 
     public List<Notes> getNotes(){
-        System.out.println("getting note");
         return notesMapper.getNotes(authenticatedUser.getLoggedInUserId());
     }
 
@@ -28,9 +27,7 @@ public class NoteServices {
     }
 
     public int addNote(NoteForm noteForm){
-        int a = notesMapper.addNote(new Notes(noteForm.getNoteTitle(), noteForm.getNoteDescription().toString(), authenticatedUser.getLoggedInUserId()));
-        System.out.println("added note" + a);
-        return a;
+        return notesMapper.addNote(new Notes(0,noteForm.getNoteTitle(),noteForm.getNoteDescription(),authenticatedUser.getLoggedInUserId()));
     }
 
     public void editNote(NoteForm noteForm){

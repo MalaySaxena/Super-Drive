@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CredentialsTab {
@@ -37,10 +38,10 @@ public class CredentialsTab {
     private List<WebElement> displayUrl;
 
     @FindBy(xpath = "//div[@id='nav-credentials']//*[@class='btn btn-success']")
-    private WebElement editButton;
+    private List<WebElement> editButton;
 
     @FindBy(xpath = "//div[@id='nav-credentials']//*[@class='btn btn-danger']")
-    private WebElement deleteLink;
+    private List<WebElement> deleteLink;
 
     public CredentialsTab(WebDriver webDriver){
         PageFactory.initElements(webDriver, this);
@@ -58,6 +59,22 @@ public class CredentialsTab {
         submitButton.click();
     }
 
-    
+    public List<String> getDetails(){
+        List<String> detail = new ArrayList<>(List.of(displayUrl.get(0).getText(),
+                displayUsername.get(0).getText(),
+                displayPassword.get(0).getText()));
+        return detail;
+    }
 
+    public void editCredential(String url, String userName, String password){
+        editButton.get(0).click();
+        inputUrl.sendKeys(url);
+        inputUsername.sendKeys(userName);
+        inputPassword.sendKeys(password);
+        submitButton.click();
+    }
+
+    public void deleteCredential(){
+        deleteLink.get(0).click();
+    }
 }

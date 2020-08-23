@@ -14,7 +14,23 @@
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a>here</a> to continue.</span>
             </div><-->
-            <div class="alert alert-success fill-parent">
+            <div class="alert alert-success fill-parent" th:if="${editCredSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${editCredSuccess}">delete</span> <span> Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div class="alert alert-success fill-parent" th:if="${deleteCredSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${deleteCredSuccess}">delete</span> <span> Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div class="alert alert-success fill-parent" th:if="${editNoteSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${editNoteSuccess}">delete</span> <span> Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div class="alert alert-success fill-parent" th:if="${deleteNoteSuccess}">
+                <h1 class="display-5">Success</h1>
+                <span th:text="${deleteNoteSuccess}">delete</span> <span> Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div class="alert alert-success fill-parent" th:if="${deleteSuccess}">
                 <h1 class="display-5">Success</h1>
                 <span th:text="${deleteSuccess}">delete</span> <span> Click <a th:href="@{/home}">here</a> to continue.</span>
             </div><!--

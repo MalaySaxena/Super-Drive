@@ -28,27 +28,27 @@ public class CredentialService {
         random.nextBytes(key);
         String encodedKey = Base64.getEncoder().encodeToString(key);
         String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), encodedKey);
-        return credentialsMapper.addCredential(new Credentials(credentialForm.getUrl(),
-                encodedKey,
+        return credentialsMapper.addCredential(new Credentials(0, credentialForm.getUrl(),
                 credentialForm.getUserName(),
-                credentialForm.getPassword(),
+                encodedKey,
+                encryptedPassword,
                 authenticatedUser.getLoggedInUserId()));
     }
 
     public List<Credentials> getCredentialsEncoded(){
         return credentialsMapper.getCredentials(authenticatedUser.getLoggedInUserId());
     }
-
-    public List<Credentials> getCredentialsDecoded(){
-        List<Credentials> credentials = credentialsMapper.getCredentials(authenticatedUser.getLoggedInUserId());
-
-        for(Credentials credential : credentials){
-            String encryptedPassword = credential.getPassword();
-            String encodedKey = credential.getKey();
-            credential.setPassword(encryptionService.decryptValue(encryptedPassword, encodedKey));
-        }
-        return credentials;
-    }
+//
+//    public List<Credentials> getCredentialsDecoded(){
+//        List<Credentials> credentials = credentialsMapper.getCredentials(authenticatedUser.getLoggedInUserId());
+//
+//        for(Credentials credential : credentials){
+//            String encryptedPassword = credential.getPassword();
+//            String encodedKey = credential.getKey();
+//            credential.setPassword(encryptionService.decryptValue(encryptedPassword, encodedKey));
+//        }
+//        return credentials;
+//    }
 
     public void updateCredential(CredentialForm credentialForm){
         Credentials credential = credentialsMapper.getCredential(credentialForm.getCredentialId());
