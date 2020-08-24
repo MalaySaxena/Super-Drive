@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class HomePage extends LoadableComponent<HomePage> {
+public class HomePage {
 
     @FindBy(xpath = "//button[text()='Logout']")
     private WebElement logoutButton;
@@ -21,21 +21,6 @@ public class HomePage extends LoadableComponent<HomePage> {
     public HomePage(WebDriver webDriver){
         this.webDriver = webDriver;
         PageFactory.initElements(webDriver,this);
-        isLoaded();
-    }
-
-    @Override
-    protected void load() {
-
-    }
-
-    @Override
-    protected void isLoaded() throws Error {
-        waitForVisibility(name);
-    }
-    private void waitForVisibility(WebElement element) throws Error{
-        new WebDriverWait(webDriver, 60)
-                .until(ExpectedConditions.visibilityOf(element));
     }
 
     public void logout(){

@@ -5,8 +5,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
@@ -28,7 +32,9 @@ class CloudStorageApplicationTests {
 	public CredentialsTab credentialsTab;
 	public NotesTab notesTab;
 
-
+	public WebDriverWait wait;
+	public Boolean mark;
+	public WebElement element;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -39,6 +45,7 @@ class CloudStorageApplicationTests {
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
 		baseURL = "http://localhost:" + port;
+		wait = new WebDriverWait(driver,60);
 	}
 
 	@AfterEach
@@ -49,33 +56,40 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void testUserSignupLogin() throws InterruptedException {
+	public void testValidUserSignupLogin(){
 
-		driver.get(baseURL + "/login");
+		String firsname = "John";
+		String lastname = "Clark";
+		String username = "superman";
+		String password = "immahere";
+
+		driver.get(baseURL+"/signup");
 
 		signupPage = new SignupPage(driver);
 
-		String username = "superstar";
-		String firstname = "George";
-		String lastname = "Bush";
-		String password = "immamypassword";
+		signupPage.signup(firsname,lastname,username,password);
 
-		signupPage.signup(firstname, lastname,username,password);
-
+		wait.until(ExpectedConditions.titleContains("Login"));
 		assertEquals(baseURL+"/login", driver.getCurrentUrl());
 
 		loginPage = new LoginPage(driver);
 
 		loginPage.login(username, password);
 
-		homePage = new HomePage(driver);
+		wait.until(ExpectedConditions.titleContains("Home"));
 
-		assertEquals(baseURL + "/home", driver.getCurrentUrl());
-		assertEquals("Welcome "+ firstname + lastname, homePage.getName());
+		homePage = new HomePage(driver);
+		assertEquals(baseURL+"/home#", driver.getCurrentUrl());
+		assertEquals("Welcome "+firsname+" "+lastname, driver.findElement(By.xpath("//div[@id='logoutDiv']//h1")).getText());
 
 		homePage.logout();
 
-		assertEquals(baseURL + "/login?logout", driver.getCurrentUrl());
+		wait.until(ExpectedConditions.titleContains("Login"));
+
+		assertEquals(baseURL+"/login?logout", driver.getCurrentUrl());
+
 	}
+
+
 
 }
