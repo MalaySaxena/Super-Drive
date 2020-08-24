@@ -80,8 +80,8 @@
                         <tbody>
                         <tr th:each="note : ${notes}">
                             <td>
-                                <button type="button" class="btn btn-success" th:attr="data-id=${note.noteId},data-title=${note.noteTitle},data-description=${note.noteDescription}" onclick="showNoteModal(this.getAttribute('data-id'),this.getAttribute('data-title'),this.getAttribute('data-description'))">Edit</button>
-                                <a class="btn btn-danger" th:href="@{/note/delete/{noteId}(noteId = ${note.noteId})}">Delete</a>
+                                <button id="edit-note" type="button" class="btn btn-success" th:attr="data-id=${note.noteId},data-title=${note.noteTitle},data-description=${note.noteDescription}" onclick="showNoteModal(this.getAttribute('data-id'),this.getAttribute('data-title'),this.getAttribute('data-description'))">Edit/View</button>
+                                <a id="delete-note" class="btn btn-danger" th:href="@{/note/delete/{noteId}(noteId = ${note.noteId})}">Delete</a>
                             </td>
                             <th  id="notetitle" scope="row" th:text="${note.noteTitle}">Example Title</th>
                             <td id="notedescription" th:text="${note.noteDescription}">Example Description </td>
@@ -115,7 +115,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
+                                <button type="button" class="btn btn-primary" id="note-modal-submit" onclick="$('#noteSubmit').click();">Save changes</button>
                             </div>
                         </div>
                     </div>
