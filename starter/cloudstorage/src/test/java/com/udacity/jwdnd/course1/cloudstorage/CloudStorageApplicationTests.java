@@ -67,11 +67,12 @@ class CloudStorageApplicationTests {
 
 		driver.get(baseURL+"/signup");
 
+		wait.until(ExpectedConditions.titleContains("Sign Up"));
 		signupPage = new SignupPage(driver);
 
 		signupPage.signup(firsname,lastname,username,password);
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get(baseURL+"/login");
 		wait.until(ExpectedConditions.titleContains("Login"));
 
 		assertEquals(baseURL+"/login", driver.getCurrentUrl());
@@ -80,16 +81,16 @@ class CloudStorageApplicationTests {
 
 		loginPage.login(username, password);
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get(baseURL+"/home");
 		wait.until(ExpectedConditions.titleContains("Home"));
 
 		homePage = new HomePage(driver);
-		assertEquals(baseURL+"/home#", driver.getCurrentUrl());
+		assertEquals(baseURL+"/home", driver.getCurrentUrl());
 		assertEquals("Welcome "+firsname+" "+lastname, driver.findElement(By.xpath("//div[@id='logoutDiv']//h1")).getText());
 
 		homePage.logout();
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
 		wait.until(ExpectedConditions.titleContains("Login"));
 
 		assertEquals(baseURL+"/login?logout", driver.getCurrentUrl());
@@ -110,7 +111,7 @@ class CloudStorageApplicationTests {
 
 		signupPage.signup(firsname,lastname,username,password);
 
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get(baseURL+"/login");
 		wait.until(ExpectedConditions.titleContains("Login"));
 		assertEquals(baseURL+"/login", driver.getCurrentUrl());
 
