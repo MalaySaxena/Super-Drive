@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -23,7 +24,7 @@ public class NotesTab {
     private List<WebElement> editButton;
 
     @FindBy(id = "delete-note")
-    private List<WebElement> deletButton;
+    private List<WebElement> deleteButton;
 
     @FindBy(id = "notetitle")
     private List<WebElement> titleList;
@@ -47,7 +48,16 @@ public class NotesTab {
         PageFactory.initElements(webDriver, this);
     }
 
-    public List<String> getDetail(){
+    public List<String> getDetail(WebDriver driver){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        wait.until(ExpectedConditions.visibilityOf(navNote)).click();
+        navNote.click();
+        wait.until(ExpectedConditions.visibilityOf(addButton));
         List<String> detail = new ArrayList<>(List.of(titleList.get(0).getText(),
                 descriptionList.get(0).getText()));
         return detail;
@@ -68,4 +78,29 @@ public class NotesTab {
         wait.until(ExpectedConditions.visibilityOf(navNote)).click();
     }
 
+    public void editNote(WebDriver driver, String title, String description){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        wait.until(ExpectedConditions.visibilityOf(navNote)).click();
+
+        wait.until(ExpectedConditions.visibilityOf(editButton.get(0))).click();
+
+        wait.until(ExpectedConditions.visibilityOf(inputTitle));
+        inputTitle.clear();;
+        inputTitle.sendKeys(title);
+
+        wait.until(ExpectedConditions.visibilityOf(inputDescription));
+        inputDescription.clear();
+        inputDescription.sendKeys(description);
+
+        wait.until(ExpectedConditions.visibilityOf(submitModalButton)).click();
+    }
+
+    public void deleteNote(WebDriver driver){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        wait.until(ExpectedConditions.visibilityOf(navNote)).click();
+
+        wait.until(ExpectedConditions.visibilityOf(deleteButton.get(0))).click();
+    }
 }

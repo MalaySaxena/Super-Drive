@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -118,23 +119,85 @@ class CloudStorageApplicationTests {
 
 	@Test
 	@Order(3)
-	public void testAddNote(){
+	public void testAddEditDeleteNote(){
 		doLoginFunction();
 
 		notesTab = new NotesTab(driver);
 
+		//adding new note
 		notesTab.addNote(driver, "Test Title", "Test Description");
 
-		List<String> detail = notesTab.getDetail();
+		List<String> detail = notesTab.getDetail(driver);
 
 		assertEquals("Test Title", detail.get(0));
 		assertEquals("Test Description", detail.get(1));
+
+		//editing new note
+		notesTab.editNote(driver, "Edit Title", "Edit Description");
+
+		driver.get(baseURL+"/home");
+
+		detail = notesTab.getDetail(driver);
+
+		assertEquals("Edit Title", detail.get(0));
+		assertEquals("Edit Description", detail.get(1));
+
+		//deleting note
+		notesTab.deleteNote(driver);
+
+		driver.get(baseURL+"/home");
+
+		wait.until(driver -> driver.findElement(By.id("nav-notes-tab"))).click();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		String noteSize = wait.until(driver -> driver.findElement(By.id("note-size"))).getText();
+
+		assertEquals("0", noteSize);
 
 		homePage.logout();
 
 		wait.until(ExpectedConditions.titleContains("Login"));
 
 		assertEquals(baseURL+"/login?logout", driver.getCurrentUrl());
+	}
+
+	@Test
+	@Order(4)
+	public void testAddEditDeleteCredential(){
+		doLoginFunction();
+
+		credentialsTab = new CredentialsTab(driver);
+
+		//adding new credential
+		credentialsTab.addCredential(driver, "www.superdrive.com", "hitman", "immapass");
+
+		List<String> detail = credentialsTab.getDetail(driver);
+
+		assertEquals("www.superdrive.com", detail.get(0));
+		assertEquals("hitman", detail.get(1));
+		assertNotEquals("immapass", detail.get(2));
+
+		//check actual password
+		wait.until(driver -> driver.findElement(By.id("edit-credential"))).click();
+		WebElement inputPassword = wait.until(driver -> driver.findElement(By.id("credential-password")));
+		String password = inputPassword.getAttribute("value");
+		assertEquals("immapass", password);
+		credentialsTab.close(driver);
+
+		//edit credential
+		credentialsTab.editCredential(driver, "www.superdrivesuper.com", "hitman2", "immacred");
+
+		driver.get(baseURL+"/home");
+
+		detail = credentialsTab.getDetail(driver);
+
+		assertEquals("www.superdrivesuper.com", detail.get(0));
+		assertEquals("hitman2", detail.get(1));
+		assertNotEquals("immacred", detail.get(2));
+
 	}
 
 	public void doLoginFunction(){

@@ -38,17 +38,6 @@ public class CredentialService {
     public List<Credentials> getCredentialsEncoded(){
         return credentialsMapper.getCredentials(authenticatedUser.getLoggedInUserId());
     }
-//
-//    public List<Credentials> getCredentialsDecoded(){
-//        List<Credentials> credentials = credentialsMapper.getCredentials(authenticatedUser.getLoggedInUserId());
-//
-//        for(Credentials credential : credentials){
-//            String encryptedPassword = credential.getPassword();
-//            String encodedKey = credential.getKey();
-//            credential.setPassword(encryptionService.decryptValue(encryptedPassword, encodedKey));
-//        }
-//        return credentials;
-//    }
 
     public void updateCredential(CredentialForm credentialForm){
         Credentials credential = credentialsMapper.getCredential(credentialForm.getCredentialId());

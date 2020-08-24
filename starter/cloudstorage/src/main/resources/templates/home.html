@@ -67,7 +67,7 @@
                 <button id="add-note" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                     + Add a New Note
                 </button>
-                <h2 th:text="${noteSize}">note number</h2>
+                <h2 id="note-size" th:text="${noteSize}">note number</h2>
                 <div class="table-responsive">
                     <table class="table table-striped" id="userTable">
                         <thead>
@@ -140,13 +140,12 @@
                         <tbody>
                         <tr th:each="cred : ${credentials}">
                             <td>
-                                <button type="button" class="btn btn-success" th:attr="data-id=${cred.credentialId},data-url=${cred.url},data-username=${cred.userName},data-password=${encryptService.decryptValue(cred.password,cred.key)}" onclick="showCredentialModal(this.getAttribute('data-id'),this.getAttribute('data-url'),this.getAttribute('data-username'),this.getAttribute('data-password'))">Edit</button>
-                                <a class="btn btn-danger" th:href="@{/credential/delete/{credentialId}(credentialId = ${cred.credentialId})}">Delete</a>
+                                <button id="edit-credential" type="button" class="btn btn-success" th:attr="data-id=${cred.credentialId},data-url=${cred.url},data-username=${cred.userName},data-password=${encryptService.decryptValue(cred.password,cred.key)}" onclick="showCredentialModal(this.getAttribute('data-id'),this.getAttribute('data-url'),this.getAttribute('data-username'),this.getAttribute('data-password'))">Edit/View</button>
+                                <a class="btn btn-danger" id="delete-credential" th:href="@{/credential/delete/{credentialId}(credentialId = ${cred.credentialId})}">Delete</a>
                             </td>
-                            <th scope="row" th:text="${cred.url}">Example URL</th>
-                            <td th:text="${cred.userName}">Example Username</td>
-                            <td th:if="${showPassword}" th:text="${cred.password}">Example Password</td>
-                            <td th:unless="${showPassword}" th:text="${cred.password}" type="password">Example Password</td>
+                            <th id="credUrl" scope="row" th:text="${cred.url}">Example URL</th>
+                            <td id="credUsername" th:text="${cred.userName}">Example Username</td>
+                            <td id="credPassword" th:text="${cred.password}">Example Password</td>
                         </tr>
                         </tbody>
                     </table>
@@ -157,7 +156,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="credentialModalLabel">Credential</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" id="close-button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -181,7 +180,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                <button type="button" class="btn btn-primary" id="credential-modal-submit" onclick="$('#credentialSubmit').click();">Save changes</button>
                             </div>
                         </div>
                     </div>
