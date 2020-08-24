@@ -14,6 +14,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -69,13 +71,16 @@ class CloudStorageApplicationTests {
 
 		signupPage.signup(firsname,lastname,username,password);
 
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		wait.until(ExpectedConditions.titleContains("Login"));
+
 		assertEquals(baseURL+"/login", driver.getCurrentUrl());
 
 		loginPage = new LoginPage(driver);
 
 		loginPage.login(username, password);
 
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		wait.until(ExpectedConditions.titleContains("Home"));
 
 		homePage = new HomePage(driver);
@@ -84,12 +89,40 @@ class CloudStorageApplicationTests {
 
 		homePage.logout();
 
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		wait.until(ExpectedConditions.titleContains("Login"));
 
 		assertEquals(baseURL+"/login?logout", driver.getCurrentUrl());
 
 	}
 
+	@Test
+	public void testInvalidUserSignupLogin(){
 
+		String firsname = "John";
+		String lastname = "Clark";
+		String username = "superma";
+		String password = "immahere";
+
+		driver.get(baseURL+"/signup");
+
+		signupPage = new SignupPage(driver);
+
+		signupPage.signup(firsname,lastname,username,password);
+
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wait.until(ExpectedConditions.titleContains("Login"));
+		assertEquals(baseURL+"/login", driver.getCurrentUrl());
+
+		loginPage = new LoginPage(driver);
+
+		loginPage.login("batman", password);
+
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("error-msg")));
+
+		assertEquals("Invalid username or password", driver.findElement(By.id("error-msg")).getText());
+
+	}
 
 }
