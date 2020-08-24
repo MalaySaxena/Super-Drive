@@ -64,7 +64,6 @@ public class NotesTab {
         wait.until(ExpectedConditions.visibilityOf(inputDescription)).sendKeys(description);
 
         wait.until(ExpectedConditions.visibilityOf(submitModalButton)).click();
-        submitButton.click();
 
         wait.until(ExpectedConditions.visibilityOf(navNote)).click();
     }
