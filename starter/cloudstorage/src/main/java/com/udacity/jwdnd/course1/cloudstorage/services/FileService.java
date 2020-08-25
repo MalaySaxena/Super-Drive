@@ -24,6 +24,8 @@ public class FileService {
         this.authenticatedUser = authenticatedUser;
     }
 
+    public boolean isFileNameAvailable(String fileName){ return filesMapper.getFile(authenticatedUser.getLoggedInUserId(), fileName) == null; }
+
     public int uploadNewFile(MultipartFile file){
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
@@ -39,10 +41,10 @@ public class FileService {
         return 0;
     }
 
-    public Files loadFile(Integer fileId){
+    public Files loadFile(String fileName){
         Files file = null;
         try{
-            file = filesMapper.getFile(authenticatedUser.getLoggedInUserId(), fileId);
+            file = filesMapper.getFile(authenticatedUser.getLoggedInUserId(), fileName);
         }catch (NullPointerException e){
             e.printStackTrace();
             throw e;

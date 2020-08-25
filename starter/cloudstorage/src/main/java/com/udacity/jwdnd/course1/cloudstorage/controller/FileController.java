@@ -28,9 +28,9 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/file/{fileId:.+}")
-    public ResponseEntity<Resource> viewFile(@PathVariable Integer fileId, Authentication authentication){
-        Files file = fileService.loadFile(fileId);
+    @GetMapping("/file/{fileName:.+}")
+    public ResponseEntity<Resource> viewFile(@PathVariable String fileName, Authentication authentication){
+        Files file = fileService.loadFile(fileName);
         try{
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getFileName())
@@ -53,7 +53,10 @@ public class FileController {
     public String uploadFile(@RequestParam("fileUpload")MultipartFile file, Authentication authentication, RedirectAttributes redirectAttributes) {
 
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message","Please upload a file!");;
+            redirectAttributes.addFlashAttribute("message","Please upload a file!");
+            return "redirect:/home";
+        }else if(!fileService.isFileNameAvailable(file.getOriginalFilename())){
+            redirectAttributes.addFlashAttribute("message","File with this name already exists!");
             return "redirect:/home";
         }
         int row = fileService.uploadNewFile(file);

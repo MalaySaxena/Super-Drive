@@ -27,8 +27,8 @@ public interface FilesMapper {
             @Result(property = "userId", column = "userid"),
             @Result(property = "fileData", column = "filedata")
     })
-    @Select("SELECT * FROM FILES WHERE userid = #{userId} AND fileid = #{fileId}")
-    public Files getFile(Integer userId,Integer fileId);
+    @Select("SELECT * FROM FILES WHERE userid = #{userId} AND filename = #{fileName}")
+    public Files getFile(Integer userId,String fileName);
 
     @Insert("INSERT INTO FILES(filename,contenttype,filesize,userid,filedata) VALUES(#{fileName},#{contentType},#{fileSize},#{userId},#{fileData})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
